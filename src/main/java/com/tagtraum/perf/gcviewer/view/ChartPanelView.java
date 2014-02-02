@@ -23,9 +23,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.SwingPropertyChangeSupport;
 
-import com.tagtraum.perf.gcviewer.GCPreferences;
 import com.tagtraum.perf.gcviewer.model.GCResource;
 import com.tagtraum.perf.gcviewer.util.LocalisationHelper;
+import com.tagtraum.perf.gcviewer.view.model.GCPreferences;
 import com.tagtraum.perf.gcviewer.view.util.ImageLoader;
 
 
