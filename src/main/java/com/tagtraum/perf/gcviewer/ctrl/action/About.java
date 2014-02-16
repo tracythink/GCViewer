@@ -7,7 +7,8 @@ import javax.swing.AbstractAction;
 
 import com.tagtraum.perf.gcviewer.util.LocalisationHelper;
 import com.tagtraum.perf.gcviewer.view.AboutDialog;
-import com.tagtraum.perf.gcviewer.view.util.ImageLoader;
+import com.tagtraum.perf.gcviewer.view.ActionCommands;
+import com.tagtraum.perf.gcviewer.view.util.ImageHelper;
 
 /**
  *
@@ -25,8 +26,8 @@ public class About extends AbstractAction {
         putValue(NAME, LocalisationHelper.getString("main_frame_menuitem_about"));
         putValue(SHORT_DESCRIPTION, LocalisationHelper.getString("main_frame_menuitem_hint_about"));
         putValue(MNEMONIC_KEY, new Integer(LocalisationHelper.getString("main_frame_menuitem_mnemonic_about").charAt(0)));
-        putValue(ACTION_COMMAND_KEY, "about");
-        putValue(SMALL_ICON, ImageLoader.loadImageIcon("about.png"));
+        putValue(ACTION_COMMAND_KEY, ActionCommands.ABOUT.toString());
+        putValue(SMALL_ICON, ImageHelper.loadImageIcon("about.png"));
     }
 
     public void actionPerformed(final ActionEvent e) {

@@ -8,11 +8,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 
-import com.tagtraum.perf.gcviewer.ctrl.GCViewerController;
+import com.tagtraum.perf.gcviewer.ctrl.GCModelLoaderController;
 import com.tagtraum.perf.gcviewer.util.LocalisationHelper;
+import com.tagtraum.perf.gcviewer.view.ActionCommands;
 import com.tagtraum.perf.gcviewer.view.GCViewerGui;
 import com.tagtraum.perf.gcviewer.view.OpenFileView;
-import com.tagtraum.perf.gcviewer.view.util.ImageLoader;
+import com.tagtraum.perf.gcviewer.view.util.ImageHelper;
 
 /**
  * @author <a href="mailto:hs@tagtraum.com">Hendrik Schreiber</a>
@@ -20,21 +21,21 @@ import com.tagtraum.perf.gcviewer.view.util.ImageLoader;
  * Time: 1:48:26 PM
  */
 public class OpenFile extends AbstractAction {
-    private GCViewerController controller;
+    private GCModelLoaderController controller;
     private GCViewerGui gcViewer;
     private File[] lastSelectedFiles = new File[0];
     private OpenFileView openFileView;
 
-    public OpenFile(GCViewerController controller, final GCViewerGui gcViewer) {
+    public OpenFile(GCModelLoaderController controller, final GCViewerGui gcViewer) {
         this.controller = controller;
         this.gcViewer = gcViewer;
         
         putValue(NAME, LocalisationHelper.getString("main_frame_menuitem_open_file"));
         putValue(SHORT_DESCRIPTION, LocalisationHelper.getString("main_frame_menuitem_hint_open_file"));
         putValue(MNEMONIC_KEY, new Integer(LocalisationHelper.getString("main_frame_menuitem_mnemonic_open_file").charAt(0)));
-        putValue(ACTION_COMMAND_KEY, "open");
+        putValue(ACTION_COMMAND_KEY, ActionCommands.OPEN_FILE.toString());
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() ));
-        putValue(SMALL_ICON, ImageLoader.loadImageIcon("open.png"));
+        putValue(SMALL_ICON, ImageHelper.loadImageIcon("open.png"));
         
         openFileView = new OpenFileView();
     }
