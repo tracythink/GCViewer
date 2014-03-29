@@ -41,7 +41,7 @@ public class DataReaderFacade {
     
     private URL getUrl(GCResource gcResource) throws MalformedURLException {
         URL url = null;
-        if (gcResource.getResourceName().startsWith("http")) {
+        if (gcResource.getResourceName().startsWith("http") || gcResource.getResourceName().startsWith("file")) {
             url = new URL(gcResource.getResourceName());
         }
         else {

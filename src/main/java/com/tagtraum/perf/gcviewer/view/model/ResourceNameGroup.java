@@ -13,11 +13,20 @@ public class ResourceNameGroup {
 
     private String[] resourceNames;
 
+    /**
+     * Initialise a group from an array of resource names.
+     * 
+     * @param resourceNames array of resource names
+     */
     public ResourceNameGroup(String[] resourceNames) {
         this.resourceNames = resourceNames;
-        Arrays.sort(this.resourceNames);
     }
     
+    /**
+     * Initialise a group from a single string consisting of resource names separated by ";"
+     * 
+     * @param resourceNameGroup resource names separated by ";"
+     */
     public ResourceNameGroup(String resourceNameGroup) {
         if (resourceNameGroup.indexOf(";") >= 0) {
             this.resourceNames = resourceNameGroup.split(";");
@@ -45,6 +54,11 @@ public class ResourceNameGroup {
         return true;
     }
 
+    /**
+     * Get all resource names of the group separated by a ";"
+     * 
+     * @return single string with all resource names separated by a ";"
+     */
     public String getGroupString() {
         StringBuilder sb = new StringBuilder();
         for (String resourceName : resourceNames) {
@@ -54,6 +68,37 @@ public class ResourceNameGroup {
         return sb.toString();
     }
     
+    /**
+     * Get short version of resource names (only file name without path), if more than one
+     * resource is in this group.
+     * 
+     * @return get short group name (only file name without path), if there is more than one
+     * resource
+     */
+    public String getGroupStringShort() {
+        if (resourceNames.length > 1) {
+            StringBuilder sb = new StringBuilder();
+            for (String resourceName : resourceNames) {
+                // test for "/" and "\\" because in Windows you have a "/" in a http url
+                // but "\\" in file strings
+                int lastIndexOfPathSeparator = resourceName.lastIndexOf("/");
+                if (lastIndexOfPathSeparator < 0) {
+                    lastIndexOfPathSeparator = resourceName.lastIndexOf("\\");
+                }
+                sb.append(resourceName.substring(lastIndexOfPathSeparator + 1)).append(";");
+            }
+            return sb.toString();
+        }
+        else {
+            return resourceNames[0];
+        }
+    }
+    
+    /**
+     * Get all resources names as an array of strings.
+     * 
+     * @return resource names as array of strings
+     */
     public String[] getResourceNames() {
         return resourceNames;
     }

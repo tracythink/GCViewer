@@ -26,7 +26,7 @@ public class OpenRecent extends AbstractAction {
         this.controller = controller;
         
         putValue(ACTION_COMMAND_KEY, ActionCommands.OPEN_RECENT.toString());
-        putValue(NAME, resourceNames.getGroupString());
+        putValue(NAME, resourceNames.getGroupStringShort());
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -4,8 +4,6 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +15,7 @@ import com.tagtraum.perf.gcviewer.view.GCViewerGuiMenuBar;
 import com.tagtraum.perf.gcviewer.view.model.RecentResourceNamesModel;
 
 /**
- * Main controller class of GCViewer. Is responsible for control flow. 
+ * Controller class for {@link GCModelLoader}.
  * 
  * @author <a href="mailto:gcviewer@gmx.ch">Joerg Wuethrich</a>
  * <p>created on: 15.12.2013</p>
@@ -120,29 +118,16 @@ public class GCModelLoaderController {
     }
     
     public void open(String[] resourceNames) {
-        String nameGroup = Arrays.asList(resourceNames).toString();
-        nameGroup = nameGroup.substring(1, nameGroup.length() - 1);
-        int i = 0; 
-        for (String name : resourceNames) {
+        for (int i = 0; i < resourceNames.length; ++i) {
             if (i == 0) {
-                openModel(name);
+                openModel(resourceNames[i]);
             }
             else {
-                addModel(name);
+                addModel(resourceNames[i]);
             }
-            ++i;
         }
         
         getRecentResourceNamesModel().add(resourceNames);
-    }
-    
-    public void open(URL[] urls) {
-        List<String> resourceNameList = new LinkedList<String>();
-        for (URL url : urls) {
-            resourceNameList.add("file".equals(url.getProtocol()) ? url.getPath() : url.toString());
-        }
-        
-        open(resourceNameList.toArray(new String[resourceNameList.size()]));
     }
     
     /**
