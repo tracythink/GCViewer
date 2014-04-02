@@ -4,7 +4,8 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.tagtraum.perf.gcviewer.ctrl.FileDropTargetListener.DropFlavor;
@@ -12,7 +13,7 @@ import com.tagtraum.perf.gcviewer.model.GCResource;
 import com.tagtraum.perf.gcviewer.view.GCDocument;
 import com.tagtraum.perf.gcviewer.view.GCViewerGui;
 import com.tagtraum.perf.gcviewer.view.GCViewerGuiMenuBar;
-import com.tagtraum.perf.gcviewer.view.model.RecentResourceNamesModel;
+import com.tagtraum.perf.gcviewer.view.model.RecentGCResourcesModel;
 
 /**
  * Controller class for {@link GCModelLoader}.
@@ -33,22 +34,34 @@ public class GCModelLoaderController {
         this.gcViewerGui = gcViewerGui;
     }
     
-    public void add(String resourceName) {
-        add(new File[]{ new File(resourceName) });
-    }
-    
     public void add(File[] files) {
+        List<GCResource> gcResourceList = new ArrayList<GCResource>();
         for (File file : files) {
-            addModel(file.getAbsolutePath());
+            GCResource gcResource = new GCResource(file.getAbsolutePath());
+            gcResourceList.add(gcResource);
+            
+            addGCResource(gcResource);
         }
 
-        getRecentResourceNamesModel().add(toStringList(files));
+        getRecentGCResourcesModel().add(gcResourceList);
     }
     
-    private void addModel(String resourceName) {
-        GCModelLoader loader = new GCModelLoader(new GCResource(resourceName));
+    public void add(GCResource gcResource) {
+        add(Arrays.asList(new GCResource[] { gcResource }));
+    }
+
+    public void add(List<GCResource> gcResourceList) {
+        for (GCResource gcResource : gcResourceList) {
+            addGCResource(gcResource);
+        }
+        
+        getRecentGCResourcesModel().add(gcResourceList);
+    }
+    
+    private void addGCResource(GCResource gcResource) {
+        GCModelLoader loader = new GCModelLoader(gcResource);
         GCDocumentController docController = getDocumentController(gcViewerGui.getSelectedGCDocument());
-        docController.addModel(loader);
+        docController.addGCResource(loader);
         
         loader.execute();
     }
@@ -70,13 +83,13 @@ public class GCModelLoaderController {
         return this.gcViewerGui;
     }
     
-    private RecentResourceNamesModel getRecentResourceNamesModel() {
-        return ((GCViewerGuiMenuBar) this.gcViewerGui.getJMenuBar()).getRecentResourceNamesModel();
+    private RecentGCResourcesModel getRecentGCResourcesModel() {
+        return ((GCViewerGuiMenuBar) this.gcViewerGui.getJMenuBar()).getRecentGCResourcesModel();
     }
     
-    private void openModel(String resourceName) {
-        GCModelLoader loader = new GCModelLoader(new GCResource(resourceName));
-        GCDocument document = new GCDocument(gcViewerGui.getPreferences(), resourceName);
+    private void openGCResource(GCResource gcResource) {
+        GCModelLoader loader = new GCModelLoader(gcResource);
+        GCDocument document = new GCDocument(gcViewerGui.getPreferences(), gcResource.getResourceName());
         document.setDropTarget(
                 new DropTarget(document, 
                         DnDConstants.ACTION_COPY, 
@@ -87,47 +100,43 @@ public class GCModelLoaderController {
         gcViewerGui.addDocument(document);
         
         GCDocumentController docController = new GCDocumentController(document);
-        docController.addModel(loader);
+        docController.addGCResource(loader);
         
         loader.execute();
     }
     
-    /**
-     * Open a new log file.
-     * @param file filename
-     */
-    public void open(File file) {
-        open(file.getAbsolutePath());
-    }
-        
     public void open(File[] files) {
-        List<String> fileNames = new LinkedList<String>();
+        List<GCResource> gcResourceList = new ArrayList<GCResource>();
         for (File file : files) {
-            fileNames.add(file.getAbsolutePath());
+            GCResource gcResource = new GCResource(file.getAbsolutePath());
+            gcResourceList.add(gcResource);
         }
-        open(fileNames.toArray(new String[fileNames.size()]));
+        
+        open(gcResourceList);
     }
     
     /**
      * Open a gc log resource from a filename or URL.
      * 
-     * @param resourceName filename or URL name.
+     * @param gcResource filename or URL name.
      */
-    public void open(String resourceName) {
-        open(new String[]{ resourceName });
+    public void open(GCResource gcResource) {
+        open(Arrays.asList(new GCResource[] { gcResource }));
     }
     
-    public void open(String[] resourceNames) {
-        for (int i = 0; i < resourceNames.length; ++i) {
+    public void open(List<GCResource> gcResourceList) {
+        for (int i = 0; i < gcResourceList.size(); ++i) {
+            GCResource gcResource = gcResourceList.get(i);
+            
             if (i == 0) {
-                openModel(resourceNames[i]);
+                openGCResource(gcResource);
             }
             else {
-                addModel(resourceNames[i]);
+                addGCResource(gcResource);
             }
         }
         
-        getRecentResourceNamesModel().add(resourceNames);
+        getRecentGCResourcesModel().add(gcResourceList);
     }
     
     /**
@@ -143,7 +152,7 @@ public class GCModelLoaderController {
             gcResource.setIsReload(true);
             GCModelLoader loader = new GCModelLoader(gcResource);
             GCDocumentController docController = getDocumentController(gcDocument);
-            docController.reloadModel(loader);
+            docController.reloadGCResource(loader);
             
             tracker.addGcModelLoader(loader);
         }
@@ -159,15 +168,6 @@ public class GCModelLoaderController {
      */
     protected void setGCViewerGui(GCViewerGui gui) {
         this.gcViewerGui = gui;
-    }
-    
-    private String[] toStringList(File[] resourceNames) {
-        List<String> resourceNameList = new LinkedList<String>();
-        for (File file : resourceNames) {
-            resourceNameList.add(file.getAbsolutePath());
-        }
-        
-        return resourceNameList.toArray(new String[resourceNameList.size()]);
     }
     
 }

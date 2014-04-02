@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 
 import com.tagtraum.perf.gcviewer.ctrl.GCModelLoaderController;
 import com.tagtraum.perf.gcviewer.view.ActionCommands;
-import com.tagtraum.perf.gcviewer.view.model.ResourceNameGroup;
+import com.tagtraum.perf.gcviewer.view.model.GCResourceGroup;
 
 /**
  * Action to open an entry of the recent urls menu.
@@ -18,19 +18,19 @@ import com.tagtraum.perf.gcviewer.view.model.ResourceNameGroup;
  */
 public class OpenRecent extends AbstractAction {
 
-    private ResourceNameGroup resourceNames;
+    private GCResourceGroup gcResourceGroup;
     private GCModelLoaderController controller;
 
-    public OpenRecent(GCModelLoaderController controller, ResourceNameGroup resourceNames) {
-        this.resourceNames = resourceNames;
+    public OpenRecent(GCModelLoaderController controller, GCResourceGroup gcResourceGroup) {
+        this.gcResourceGroup = gcResourceGroup;
         this.controller = controller;
         
         putValue(ACTION_COMMAND_KEY, ActionCommands.OPEN_RECENT.toString());
-        putValue(NAME, resourceNames.getGroupStringShort());
+        putValue(NAME, gcResourceGroup.getGroupStringShort());
     }
 
     public void actionPerformed(ActionEvent e) {
-        controller.open(resourceNames.getResourceNames());
+        controller.open(gcResourceGroup.getGCResourceList());
     }
 
 }
